@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Team Americano Tennis Scoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #f7f7f7; }
+    h1, h2 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #eee; }
+    input[type="text"] { width: 80px; padding: 5px; }
+    .score-summary { font-size: 1.2em; text-align: center; margin-top: 20px; }
+    .winner { font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+
+  <h1>Team Americano Scoring</h1>
+  <h2>Bangkok Bangers vs Singapore Seis Amigos</h2>
+
+  <table id="matchTable">
+    <thead>
+      <tr>
+        <th>Round</th>
+        <th>Court</th>
+        <th>Bangkok Pair</th>
+        <th>Singapore Pair</th>
+        <th>Score (BB–SA)</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <div class="score-summary">
+    Bangkok Bangers: <span id="bbTotal">0</span> points |
+    Singapore Amigos: <span id="saTotal">0</span> points
+    <br><br>
+    <span id="winnerText"></span>
+  </div>
+
+  <script>
+    const matches = [
+      ["1", "1", "Rohaan & Vinnay", "Alvaro & Karan"],
+      ["1", "2", "Ishan & Joseph", "Aman & Stanley"],
+      ["1", "3", "Jon & Duncan", "Gaurav & Gavin"],
+      ["2", "1", "Rohaan & Ishan", "Alvaro & Aman"],
+      ["2", "2", "Vinnay & Jon", "Karan & Gaurav"],
+      ["2", "3", "Joseph & Duncan", "Stanley & Gavin"],
+      ["3", "1", "Rohaan & Joseph", "Alvaro & Stanley"],
+      ["3", "2", "Vinnay & Duncan", "Karan & Gavin"],
+      ["3", "3", "Ishan & Jon", "Aman & Gaurav"],
+      ["4", "1", "Rohaan & Jon", "Alvaro & Gaurav"],
+      ["4", "2", "Vinnay & Joseph", "Karan & Stanley"],
+      ["4", "3", "Ishan & Duncan", "Aman & Gavin"],
+      ["5", "1", "Rohaan & Duncan", "Alvaro & Gavin"],
+      ["5", "2", "Vinnay & Ishan", "Karan & Aman"],
+      ["5", "3", "Joseph & Jon", "Stanley & Gaurav"]
+    ];
+
+    const tbody = document.querySelector("#matchTable tbody");
+
+    matches.forEach((match, idx) => {
+      const tr = document.createElement("tr");
+      match.forEach(val => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+
+      const inputTd = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "e.g. 17–15";
+      input.dataset.idx = idx;
+      input.addEventListener("input", updateScores);
+      inputTd.appendChild(input);
+      tr.appendChild(inputTd);
+
+      tbody.appendChild(tr);
+    });
+
+    function updateScores() {
+      let bb = 0, sa = 0;
+      document.querySelectorAll("input").forEach(input => {
+        const val = input.value.trim();
+        const parts = val.split("–");
+        if (parts.length === 2) {
+          const bbScore = parseInt(parts[0]);
+          const saScore = parseInt(parts[1]);
+          if (!isNaN(bbScore) && !isNaN(saScore)) {
+            bb += bbScore;
+            sa += saScore;
+          }
+        }
+      });
+      document.getElementById("bbTotal").textContent = bb;
+      document.getElementById("saTotal").textContent = sa;
+
+      const winner = document.getElementById("winnerText");
+      if (bb > sa) winner.textContent = "🏆 Bangkok Bangers are leading!";
+      else if (sa > bb) winner.textContent = "🏆 Singapore Seis Amigos are leading!";
+      else winner.textContent = "It's currently tied!";
+    }
+  </script>
+
+</body>
+</html>
